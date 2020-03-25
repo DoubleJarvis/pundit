@@ -592,6 +592,27 @@ describe Pundit do
         "votes" => 5
       )
     end
+
+    context "with a given policy_class" do
+      it "checks policy_class for permitted attributes" do
+        params = ActionController::Parameters.new(
+          customer_post: {
+            title: "Hello",
+            votes: 5,
+            admin: true,
+            custom_attribute: "custom_value"
+          }
+        )
+
+        action = "update"
+        result = Controller.new(user, action, params)
+                           .permitted_attributes(customer_post, policy_class: Nested::PublicationPolicy)
+
+        expect(result.to_h).to eq(
+          "custom_attribute" => "custom_value"
+        )
+      end
+    end
   end
 
   describe "#permitted_attributes_for_action" do
@@ -621,6 +642,28 @@ describe Pundit do
 
       action = "update"
       expect(Controller.new(user, action, params).permitted_attributes(post, :revise).to_h).to eq("body" => "blah")
+    end
+
+    context "with a given policy_class" do
+      it "checks policy_class for permitted attributes" do
+        params = ActionController::Parameters.new(
+          post: {
+            title: "Hello",
+            body: "blah",
+            votes: 5,
+            admin: true,
+            custom_revisor: "custom_value"
+          }
+        )
+
+        action = "revise"
+        result = Controller.new(user, action, params)
+                           .permitted_attributes(post, policy_class: Nested::PublicationPolicy)
+
+        expect(result.to_h).to eq(
+          "custom_revisor" => "custom_value"
+        )
+      end
     end
   end
 

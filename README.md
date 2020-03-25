@@ -793,6 +793,20 @@ def pundit_params_for(_record)
 end
 ```
 
+You can pass an argument to override the policy class if necessary. For example:
+
+```ruby
+def update
+  @post = Post.find(params[:id])
+  if @post.update_attributes(permitted_attributes(@post, policy_class: Admin::PublicationPolicy))
+    redirect_to @post
+  else
+    render :edit
+  end
+end
+```
+
+
 ## RSpec
 
 ### Policy Specs

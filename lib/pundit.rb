@@ -273,8 +273,8 @@ module Pundit
   # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
   #   If omitted then this defaults to the Rails controller action name.
   # @return [Hash{String => Object}] the permitted attributes
-  def permitted_attributes(record, action = action_name)
-    policy = policy(record)
+  def permitted_attributes(record, action = action_name, policy_class: nil)
+    policy = policy_class ? policy_class.new(pundit_user, record) : policy(record)
     method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
       "permitted_attributes_for_#{action}"
     else

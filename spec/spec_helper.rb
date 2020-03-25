@@ -109,6 +109,18 @@ class PublicationPolicy < Struct.new(:user, :publication)
   end
 end
 
+module Nested
+  class PublicationPolicy < Struct.new(:user, :publication)
+    def permitted_attributes
+      %i[custom_attribute]
+    end
+
+    def permitted_attributes_for_revise
+      %i[custom_revisor]
+    end
+  end
+end
+
 class Comment
   extend ActiveModel::Naming
 end
